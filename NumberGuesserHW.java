@@ -7,7 +7,8 @@ import java.util.Scanner;
 
 public class NumberGuesserHW {
 	//CHANGE HERE
-   private int range;
+   int count = 1;
+   private static int x;
    private int level = 1;
 	private int strikes = 0;
 	private int maxStrikes = 5;
@@ -28,7 +29,8 @@ public class NumberGuesserHW {
 	public static int getNumber(int level) {
 		int range = 9 + ((level - 1) * 5);
 		System.out.println("I picked a random number between 1-" + (range + 1) + ", let's see if you can guess.");
-		return new Random().nextInt(range) + 1;
+      x = new Random().nextInt(range) + 1;
+      return x;
 	}
 
 	private void win() {
@@ -66,7 +68,7 @@ public class NumberGuesserHW {
 		}
 		System.out.println("You guessed " + guess);
 		if (guess == number) {
-			win();
+         win();
 		} else {
 			System.out.println("That's wrong");
 			strikes++;
@@ -75,14 +77,19 @@ public class NumberGuesserHW {
 			} else {
 				int remainder = maxStrikes - strikes;
 				System.out.println("You have " + remainder + "/" + maxStrikes + " attempts remaining");
-				if (guess > number) {
+            //CHANGE
+            if (count%2 == 0)
+            {
+               if (guess > number) {
 					System.out.println("Lower");
 				} else if (guess < number) {
 					System.out.println("Higher");
+               }
 				}
-			}
-		}
-	}
+            count++;
+         }     
+      }
+   }
 
 	private int getGuess(String message) {
 		int guess = -1;
@@ -100,7 +107,7 @@ public class NumberGuesserHW {
    {
 		try (FileWriter fw3 = new FileWriter(saveFile3)) 
       {
-			fw3.write("" + range);
+			fw3.write("" + x);
 		} 
       catch (IOException e) 
       {
@@ -119,10 +126,10 @@ public class NumberGuesserHW {
       {
 			while (reader.hasNextLine()) 
          {
-				int _range = reader.nextInt();
-				if (range > 0)
+				int _x = reader.nextInt();
+				if (x > 0)
             {
-					range = _range;
+					x = _x;
 					break;
 				}
 			}
@@ -225,6 +232,12 @@ public class NumberGuesserHW {
 					+ " attempts to guess.");
          if (loadLevel()) {
 				System.out.println("Successfully loaded level " + level + " let's continue then");
+         }
+         //CHANGE HERE
+         if (loadStrikes())
+         {
+            System.out.println("Successfully loaded strikes, you have strikes " + strikes + " so far.");
+         }
 			number = getNumber(level);
 			isRunning = true;
 			while (input.hasNext()) {
@@ -236,13 +249,7 @@ public class NumberGuesserHW {
 				int guess = getGuess(message);
 				processGuess(guess);
 			}
-         }
-      //CHANGE HERE
-         if (loadStrikes())
-         {
-            System.out.println("Successfully loaded strikes, you have strikes " + strikes + " so far.");
-         }
-
+         
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println(e.getMessage());
