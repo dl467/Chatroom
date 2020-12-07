@@ -1,2 +1,8 @@
-myprivatecreds.*
-
+# Java related
+target# Java related
+target/**
+# If you want to commit the final project jars comment out the .jar line
+#*.jar
+*.war
+*.ear
+*.class
